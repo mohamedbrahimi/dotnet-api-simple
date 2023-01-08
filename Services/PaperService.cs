@@ -30,11 +30,12 @@ public class PaperService: IPaperService
 
     public bool UpdateSinglePaper(int id, Paper paper)
     {
-        var selectedPaper = this.SinglePaper(id);
-        if (selectedPaper == null)
+        var indexPaper = _papers.FindIndex(x => x.Id == id);
+        if (indexPaper < 0)
             return false;
         
-        
+        _papers[indexPaper] = paper;
+        return true;
     }
 
     public bool RemoveSinglePaper(int id)
