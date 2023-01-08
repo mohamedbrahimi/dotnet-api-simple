@@ -39,6 +39,12 @@ public class PaperService: IPaperService
 
     public bool RemoveSinglePaper(int id)
     {
-        throw new NotImplementedException();
+        var indexPaper = _papers.FindIndex(x => x.Id == id);
+        if (indexPaper < 0)
+            return false;
+        
+        _papers.RemoveAt(indexPaper);
+
+        return true;
     }
 }
