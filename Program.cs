@@ -10,8 +10,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 // App services 
-builder.Services.AddSingleton<IPaperService, PaperService>();
-
+builder.Services.AddScoped<IPaperService, PaperService>();
+builder.Services.AddDbContext<AppDbService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
