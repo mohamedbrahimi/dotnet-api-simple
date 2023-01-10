@@ -5,15 +5,17 @@ namespace webapi_try.Services;
 
 public class AppDbService: DbContext
 {
-    public AppDbService(DbContextOptions<AppDbService> options): base(options)
+    private readonly IConfiguration _configuration;
+    public AppDbService(DbContextOptions<AppDbService> options, IConfiguration configuration): base(options)
     {
+        _configuration = configuration;
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);
         optionsBuilder.UseMySql(
-            "server=localhost;port=3306;database=EFCoreMySQL;user=root;password=",
+            _configuration.GetConnectionString("DefaultConnection"),
             new MySqlServerVersion(new Version(8, 0, 11)));
     }
 
