@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using webapi_try.Models;
+using webapi_try.DTOs;
 
 namespace webapi_try.Controllers;
 
@@ -15,32 +15,32 @@ public class PaperNamesController : Controller
     }
 
     [HttpGet("list")]
-    public ActionResult<List<Paper>> GetPapers()
+    public async Task<ActionResult<List<PaperDto>>> GetPapers()
     {
-        return Ok(_paperService.PapersList());
+        return Ok(await _paperService.PapersList());
     }
 
     [HttpGet("{id}")]
-    public ActionResult<Paper> SinglePaper(int id)
+    public async Task<ActionResult<PaperDto>> SinglePaper(int id)
     {
-        return Ok(_paperService.SinglePaper(id));
+        return Ok(await _paperService.SinglePaper(id));
     }
 
     [HttpPost()]
-    public ActionResult<List<Paper>> AddPaper([FromForm] Paper paper)
+    public async Task<ActionResult<List<PaperDto>>> AddPaper([FromForm] PaperDto paper)
     {
-        return Ok(_paperService.AddSinglePaper(paper));
+        return Ok(await _paperService.AddSinglePaper(paper));
     }
 
     [HttpPut("{id}")]
-    public ActionResult<bool> UpdatePaper(int id, [FromForm] Paper paper)
+    public async Task<ActionResult<bool>> UpdatePaper(int id, [FromForm] PaperDto paper)
     {
-        return Ok(_paperService.UpdateSinglePaper(id, paper));
+        return Ok(await _paperService.UpdateSinglePaper(id, paper));
     }
    
     [HttpDelete("{id}")]
-    public ActionResult<bool> DeletePaper(int id)
+    public async Task<ActionResult<bool>> DeletePaper(int id)
     {
-        return Ok(_paperService.RemoveSinglePaper(id));
+        return Ok(await _paperService.RemoveSinglePaper(id));
     }
 }
