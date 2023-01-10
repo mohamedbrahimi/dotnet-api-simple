@@ -1,51 +1,68 @@
+using Microsoft.EntityFrameworkCore;
+using webapi_try.DTOs;
 using webapi_try.Models;
 
 namespace webapi_try.Services;
 
 public class PaperService: IPaperService
 {
-    private List<Paper> _papers = new List<Paper>
+
+    private readonly AppDbService _appDbService;
+
+    public PaperService(AppDbService appDbService)
     {
-        new Paper() { Id = 1, Path = "/etc/home/1.txt"},
-        new Paper() { Id = 2, Path = "/etc/home/2.txt"},
-        new Paper() { Id = 3, Path = "/etc/home/3.txt"},
-        new Paper() { Id = 4, Path = "/etc/home/4.txt"},
-       
-    };
-    public List<Paper> PapersList()
+        _appDbService = appDbService;
+    }
+    
+    public async Task<List<Paper>> PapersList()
     {
-        return _papers;
+        var papers = await _appDbService.Papers.ToListAsync();
+        return papers;
     }
 
-    public Paper? SinglePaper(int id)
+    public async Task<Paper?> SinglePaper(int id)
     {
-        return _papers.Find(x => x.Id ==  id) ;
+        return await _appDbService.Papers.FindAsync(id);
     }
 
-    public List<Paper> AddSinglePaper(Paper paper)
+    public async Task<List<Paper>> AddSinglePaper(PaperDto paper)
     {
-        _papers.Add(paper);
-        return _papers;
+        Paper newPaper = new Paper()
+        {
+            Id = paper.Id,
+            Path = paper.Path,
+            Name = paper.Name,
+            Dir = paper.Dir,
+        };
+        _appDbService.Papers.Add(newPaper);
+        await _appDbService.SaveChangesAsync();
+        return await _appDbService.Papers.ToListAsync();
     }
 
-    public bool UpdateSinglePaper(int id, Paper paper)
+    public async Task<bool> UpdateSinglePaper(int id, PaperDto paper)
     {
-        var indexPaper = _papers.FindIndex(x => x.Id == id);
-        if (indexPaper < 0)
+        Paper? selectedPaper =  await _appDbService.Papers.FindAsync(id);
+        if (selectedPaper == null)
             return false;
-        
-        _papers[indexPaper] = paper;
+
+        selectedPaper.Path = paper.Path ?? selectedPaper.Path;
+        selectedPaper.Name = paper.Name ?? selectedPaper.Name;
+        selectedPaper.Dir = paper.Dir ?? selectedPaper.Dir;
+
+        await _appDbService.SaveChangesAsync();
         return true;
     }
 
-    public bool RemoveSinglePaper(int id)
+    public async Task<bool> RemoveSinglePaper(int id)
     {
-        var indexPaper = _papers.FindIndex(x => x.Id == id);
-        if (indexPaper < 0)
+       
+        Paper? selectedPaper =  await _appDbService.Papers.FindAsync(id);
+        if (selectedPaper == null)
             return false;
-        
-        _papers.RemoveAt(indexPaper);
 
+        _appDbService.Papers.Remove(selectedPaper);
+
+        await _appDbService.SaveChangesAsync();
         return true;
     }
 }
