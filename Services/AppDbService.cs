@@ -21,5 +21,6 @@ public class AppDbService: DbContext
             new MySqlServerVersion(new Version(8, 0, 11)));
     }
 
-   public DbSet<Paper> Papers { get; set; }
+    public DbSet<Paper> Papers { get; set; }
+    public DbSet<User> Users { get; set; }
 }
