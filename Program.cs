@@ -11,6 +11,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 // App services 
 builder.Services.AddScoped<IPaperService, PaperService>();
+builder.Services.AddSingleton<IConfigService, ConfigurationService>();
 builder.Services.AddDbContext<AppDbService>();
 var app = builder.Build();
 
