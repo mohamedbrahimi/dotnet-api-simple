@@ -1,21 +1,23 @@
 using Microsoft.EntityFrameworkCore;
 using webapi_try.Models;
+using webapi_try.Tools;
 
 namespace webapi_try.Services;
 
 public class AppDbService: DbContext
 {
-    private readonly IConfiguration _configuration;
-    public AppDbService(DbContextOptions<AppDbService> options, IConfiguration configuration): base(options)
+    private readonly IConfigService _configService;
+    public AppDbService(DbContextOptions<AppDbService> options,
+        IConfigService configService): base(options)
     {
-        _configuration = configuration;
+        _configService = configService;
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);
         optionsBuilder.UseMySql(
-            _configuration.GetConnectionString("DefaultConnection"),
+            _configService.ReadSetting(ConstantsEnv.DB_CONNECTION_STRING),
             new MySqlServerVersion(new Version(8, 0, 11)));
     }
 
